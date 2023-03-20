@@ -1,22 +1,19 @@
 package com.skypro.auction.DTO;
 
-import com.skypro.auction.enums.Status;
-import com.skypro.auction.model.*;
+import com.skypro.auction.model.Lot;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
 @Data
-public class LotDTO {
-    private Long id;
-    private Status status;
+public class CreateLotDTO {
     private String title;
     private String  description;
     private Integer startPrice;
     private Integer bidPrice;
 
 
-    public static LotDTO fromLot(Lot lot){
-        var dto = new LotDTO();
+    public static CreateLotDTO fromLot(Lot lot){
+        var dto = new CreateLotDTO();
         BeanUtils.copyProperties(lot, dto);
         return dto;
     }

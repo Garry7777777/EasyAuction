@@ -2,17 +2,16 @@ package com.skypro.auction.model;
 
 import lombok.*;
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-
-@Entity
 @Data
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Bid {
-    @Id
-    @GeneratedValue
-    private Long id;
     private String bidder;
-    private LocalDate date;
+    @Id
+    private LocalDateTime date;
     @ManyToOne(fetch = FetchType.LAZY)
     private Lot lot;
 }
