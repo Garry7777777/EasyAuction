@@ -1,6 +1,5 @@
 package com.skypro.auction.model;
 
-
 import com.skypro.auction.enums.Status;
 import lombok.Data;
 import javax.persistence.*;

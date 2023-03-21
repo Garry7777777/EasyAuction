@@ -1,19 +1,15 @@
 package com.skypro.auction.service;
 
-import com.skypro.auction.DTO.BidDTO;
-import com.skypro.auction.DTO.CreateLotDTO;
-import com.skypro.auction.DTO.FullLotDTO;
-import com.skypro.auction.DTO.LotDTO;
+import com.skypro.auction.DTO.*;
 import com.skypro.auction.model.Lot;
 import com.skypro.auction.enums.Status;
-import com.skypro.auction.repository.BidRepository;
-import com.skypro.auction.repository.LotRepository;
+import com.skypro.auction.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,8 +44,8 @@ public class LotService {
     public boolean checkLot(CreateLotDTO createLotDTO) {
         return createLotDTO.getBidPrice() > 0 &&
                 createLotDTO.getStartPrice() > 0 &&
-                !createLotDTO.getDescription().isEmpty() &&
-                !createLotDTO.getTitle().isEmpty();
+                !createLotDTO.getDescription().isBlank() &&
+                !createLotDTO.getTitle().isBlank();
     }
 
 
@@ -62,10 +58,15 @@ public class LotService {
         Lot lot = lotRepository.findById(id).get();
         FullLotDTO fullLotDTO = FullLotDTO.fromLot(lot);
 
-        fullLotDTO.setCurrentPrice(lot.getStartPrice()
-                + lot.getBidPrice()  * (int)bidRepository.findByLotId(id).stream().count() );
+        fullLotDTO.setCurrentPrice(
+                lot.getStartPrice() + lot.getBidPrice() * bidRepository.findByLotId(id).size());
+
         fullLotDTO.setLastBid(
-                bidRepository.findByLotIdOrderByDateDesc(id).stream().limit(1).map(BidDTO::fromBid).collect(Collectors.toList()));
-        return fullLotDTO ;
+                bidRepository.findByLotIdOrderByDateDesc(id).stream().findFirst().map(BidDTO::fromBid).get());
+        return  fullLotDTO;
+    }
+
+    public List<LotDTO> listLots() {
+        return lotRepository.findAll().stream().map(LotDTO::fromLot).collect(Collectors.toList());
     }
 }

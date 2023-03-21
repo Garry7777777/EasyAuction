@@ -1,9 +1,11 @@
 package com.skypro.auction.DTO;
 
 import com.skypro.auction.model.Bid;
+import lombok.Data;
 import org.springframework.beans.BeanUtils;
 import java.time.LocalDateTime;
 
+@Data
 public class BidDTO {
     private String bidder;
     private LocalDateTime date;
@@ -12,10 +14,5 @@ public class BidDTO {
         var dto = new BidDTO();
         BeanUtils.copyProperties(bid, dto);
         return dto;
-    }
-    public Bid toBid(){
-        Bid bid = new Bid();
-        BeanUtils.copyProperties(this, bid );
-        return bid;
     }
 }

@@ -5,8 +5,6 @@ import com.skypro.auction.model.*;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
-import java.util.List;
-
 @Data
 public class FullLotDTO {
     private Long id;
@@ -16,7 +14,7 @@ public class FullLotDTO {
     private Integer startPrice;
     private Integer bidPrice;
     private Integer currentPrice;
-    private List<BidDTO> lastBid;
+    private BidDTO lastBid;
 
 
     public static FullLotDTO fromLot(Lot lot){
@@ -24,9 +22,5 @@ public class FullLotDTO {
         BeanUtils.copyProperties(lot, dto);
         return dto;
     }
-    public Lot toLot(){
-        Lot lot = new Lot();
-        BeanUtils.copyProperties(this, lot );
-        return lot;
-    }
+
 }

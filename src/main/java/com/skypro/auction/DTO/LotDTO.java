@@ -20,9 +20,4 @@ public class LotDTO {
         BeanUtils.copyProperties(lot, dto);
         return dto;
     }
-    public Lot toLot(){
-        Lot lot = new Lot();
-        BeanUtils.copyProperties(this, lot );
-        return lot;
-    }
 }
