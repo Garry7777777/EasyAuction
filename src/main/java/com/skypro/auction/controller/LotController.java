@@ -42,41 +42,48 @@ public class LotController {
 
     @PostMapping ("/{id}/stop")
     public ResponseEntity<String> stopLotBidding (@PathVariable Long id ){
-        if (lotService.stopLotBidding(id)) return ResponseEntity.ok().build();
+        if (lotService.setStatusLotBidding(id, Status.STOPPED))
+             return ResponseEntity.ok().build();
         else return ResponseEntity.badRequest().build();
     }
 
     @PostMapping("/{id}/bid")
-    public ResponseEntity<String> lotBid (@PathVariable Long id, @RequestBody String name ){
+    public ResponseEntity<String> lotBid (@PathVariable Long id, @RequestBody String nameDTO ){
 
-        Status lotStatus = bidService.createBid(id, name);
+        Status lotStatus = bidService.createBid(id, nameDTO);
         if (lotStatus == null) return ResponseEntity.notFound().build();
-        if (lotStatus != Status.STARTED) return ResponseEntity.badRequest().build();
+        if (lotStatus != Status.STARTED) return
+               ResponseEntity.badRequest().build();
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{id}/start")
     public ResponseEntity<String> startLotBidding (@PathVariable Long id ){
-        if (lotService.startLotBidding(id)) return ResponseEntity.ok().build();
+
+        if (lotService.setStatusLotBidding(id, Status.STARTED))
+             return ResponseEntity.ok().build();
         else return ResponseEntity.badRequest().build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<FullLotDTO> getLotById (@PathVariable Long id ){
-        if (lotService.getLotById(id) == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(lotService.getLotById(id));
+        var lot = lotService.getLotById(id);
+        if ( lot == null) return ResponseEntity.notFound().build();
+                     else return ResponseEntity.ok(lot);
     }
 
     @GetMapping("/{id}/first")
     public ResponseEntity<BidDTO> getFirstByLotId (@PathVariable Long id ){
-        if (bidService.getFirstByLotId(id) == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(bidService.getFirstByLotId(id));
+        var bid = bidService.getFirstByLotId(id);
+        if ( bid == null) return ResponseEntity.notFound().build();
+                     else return ResponseEntity.ok(bid);
     }
 
     @GetMapping("/{id}/frequent")
     public ResponseEntity<BidDTO> getFrequentByLotId (@PathVariable Long id ){
-        if (bidService.getFrequentByLotId(id) == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(bidService.getFrequentByLotId(id));
+        var bid = bidService.getFrequentByLotId(id);
+        if ( bid == null) return ResponseEntity.notFound().build();
+                     else return ResponseEntity.ok(bid);
     }
 
     @GetMapping("/export")

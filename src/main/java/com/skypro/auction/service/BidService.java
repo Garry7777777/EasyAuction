@@ -20,19 +20,20 @@ public class BidService {
 
     public Status createBid(Long id, String name) {
 
-        Lot lot = lotRepository.findById(id).orElse(null);
-        if (lot == null) return null;
-        if (lot.getStatus() != Status.STARTED) return lot.getStatus();
-        bidRepository.save(new Bid(name, LocalDateTime.now(), lotRepository.findById(id).get()));
+        var lot = lotRepository.findById(id);
+        if (lot.isEmpty()) return null;
+        if (lot.get().getStatus() != Status.STARTED) return lot.get().getStatus();
+        bidRepository.save(new Bid(name, LocalDateTime.now(), lot.get()));
         return Status.STARTED;
     }
 
     public BidDTO getFirstByLotId(Long id) {
-        return bidRepository.findByLotIdOrderByDateAsc(id).stream().findFirst().map(BidDTO::fromBid).get();
+        return bidRepository.findByLotIdOrderByDateAsc(id)
+                .stream().findFirst().map(BidDTO::fromBid).orElse(null);
     }
 
     public BidDTO getFrequentByLotId(Long id) {
     return bidRepository.findByBidderAndLot_IdOrderByDateDesc(bidRepository.findFrequentByLotId(id),id).
-            stream().findFirst().map(BidDTO::fromBid).get();
+            stream().findFirst().map(BidDTO::fromBid).orElse(null);
     }
 }
