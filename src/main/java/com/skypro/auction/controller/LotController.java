@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
+import static com.skypro.auction.enums.Status.*;
+
 
 
 @RestController
@@ -27,24 +29,23 @@ public class LotController {
 
     @PostMapping
     public ResponseEntity<LotDTO> createLot(@RequestBody CreateLotDTO createLotDTO) {
-        if ( lotService.checkLot(createLotDTO))
-             return ResponseEntity.ok(lotService.createLot(createLotDTO));
+        if (lotService.checkLot(createLotDTO)) return
+                ResponseEntity.ok(lotService.createLot(createLotDTO));
         else return ResponseEntity.badRequest().build();
     }
 
     @GetMapping
-    public ResponseEntity<Collection<LotDTO>> getLots(@RequestParam(required = false)
-                                                      @PageableDefault Pageable pageable,
-                                                      @RequestParam(required = false) Status status){
-
+    public ResponseEntity<Collection<LotDTO>> getLots(
+            @RequestParam(required = false)@PageableDefault Pageable pageable,
+            @RequestParam(required = false) Status status){
     return ResponseEntity.ok(lotService.getLots(pageable, status));
     }
 
     @PostMapping ("/{id}/stop")
     public ResponseEntity<String> stopLotBidding (@PathVariable Long id ){
-        if (lotService.setStatusLotBidding(id, Status.STOPPED))
+        if (lotService.setStatusLotBidding(id, STOPPED))
              return ResponseEntity.ok().build();
-        else return ResponseEntity.badRequest().build();
+        else return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/{id}/bid")
@@ -52,17 +53,16 @@ public class LotController {
 
         Status lotStatus = bidService.createBid(id, nameDTO);
         if (lotStatus == null) return ResponseEntity.notFound().build();
-        if (lotStatus != Status.STARTED) return
-               ResponseEntity.badRequest().build();
+        if (lotStatus != STARTED) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{id}/start")
     public ResponseEntity<String> startLotBidding (@PathVariable Long id ){
 
-        if (lotService.setStatusLotBidding(id, Status.STARTED))
+        if (lotService.setStatusLotBidding(id, STARTED))
              return ResponseEntity.ok().build();
-        else return ResponseEntity.badRequest().build();
+        else return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/{id}")
