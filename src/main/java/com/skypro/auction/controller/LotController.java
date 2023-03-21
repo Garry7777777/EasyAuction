@@ -12,7 +12,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
 
@@ -80,27 +79,22 @@ public class LotController {
         return ResponseEntity.ok(bidService.getFrequentByLotId(id));
     }
 
-
     @GetMapping("/export")
     public void exportCSV(HttpServletResponse response) throws Exception {
 
         //set file name and content type
         String filename = "lots.csv";
-
         response.setContentType("text/csv");
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + filename + "\"");
 
         //create a csv writer
-        StatefulBeanToCsv<LotDTO> writer = new StatefulBeanToCsvBuilder<LotDTO>(response.getWriter())
+        StatefulBeanToCsv<ExportLotDTO> writer = new StatefulBeanToCsvBuilder<ExportLotDTO>(response.getWriter())
                 .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
                 .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
                 .withOrderedResults(false)
                 .build();
 
-        //write all lots to csv file
-        writer.write(lotService.listLots());
-
+        writer.write(lotService.listExportLots());
     }
-
 }

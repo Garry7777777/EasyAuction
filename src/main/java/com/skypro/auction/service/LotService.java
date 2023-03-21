@@ -42,8 +42,8 @@ public class LotService {
     }
 
     public boolean checkLot(CreateLotDTO createLotDTO) {
-        return createLotDTO.getBidPrice() > 0 &&
-                createLotDTO.getStartPrice() > 0 &&
+        return  createLotDTO.getBidPrice() >= 1 &&
+                createLotDTO.getStartPrice() >= 1 &&
                 !createLotDTO.getDescription().isBlank() &&
                 !createLotDTO.getTitle().isBlank();
     }
@@ -57,16 +57,27 @@ public class LotService {
     public FullLotDTO getLotById(Long id) {
         Lot lot = lotRepository.findById(id).get();
         FullLotDTO fullLotDTO = FullLotDTO.fromLot(lot);
-
-        fullLotDTO.setCurrentPrice(
-                lot.getStartPrice() + lot.getBidPrice() * bidRepository.findByLotId(id).size());
-
-        fullLotDTO.setLastBid(
-                bidRepository.findByLotIdOrderByDateDesc(id).stream().findFirst().map(BidDTO::fromBid).get());
+        fullLotDTO.setCurrentPrice(getCurrentPrice(id));
+        fullLotDTO.setLastBid(getLastBid(id));
         return  fullLotDTO;
     }
 
-    public List<LotDTO> listLots() {
-        return lotRepository.findAll().stream().map(LotDTO::fromLot).collect(Collectors.toList());
+    public List<ExportLotDTO> listExportLots() {
+
+        return lotRepository.findAll().stream().map(ExportLotDTO::fromLot)
+                .peek(exportLotDTO -> exportLotDTO.setCurrentPrice(getCurrentPrice(exportLotDTO.getId())))
+                .peek(exportLotDTO -> exportLotDTO.setLastBidder(getLastBid(exportLotDTO.getId()).getBidder()))
+                .collect(Collectors.toList());
     }
+
+    private BidDTO getLastBid(Long id) {
+        return bidRepository.findByLotIdOrderByDateDesc(id).stream().findFirst().map(BidDTO::fromBid).get();
+    }
+
+    private Integer getCurrentPrice(Long id) {
+        Lot lot = lotRepository.findById(id).get();
+        return lot.getStartPrice() + lot.getBidPrice() * bidRepository.findByLotId(id).size();
+    }
+
+
 }

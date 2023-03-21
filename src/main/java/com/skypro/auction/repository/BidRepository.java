@@ -1,7 +1,6 @@
 package com.skypro.auction.repository;
 
-import com.skypro.auction.model.Bid;
-import com.skypro.auction.model.Lot;
+import com.skypro.auction.model.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import java.util.List;

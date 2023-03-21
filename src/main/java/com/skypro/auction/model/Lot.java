@@ -17,7 +17,6 @@ public class Lot {
     private String  description;
     private Integer startPrice;
     private Integer bidPrice;
-    private Integer currentPrice;
     @OneToMany (mappedBy = "lot",cascade = CascadeType.REMOVE )
     private List<Bid> lastBid;
 }
