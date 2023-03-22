@@ -57,7 +57,7 @@ public class LotService {
         return  fullLotDTO;
     }
 
-    public void ExportLots(HttpServletResponse response) throws Exception {
+    public void exportLots(HttpServletResponse response) throws Exception {
 
         var listExportLots = lotRepository.findAll().stream().map(ExportLotDTO::fromLot)
                 .peek(exportLotDTO -> exportLotDTO.setCurrentPrice(getCurrentPrice(exportLotDTO.getId())))

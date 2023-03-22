@@ -84,6 +84,6 @@ public class LotController {
 
     @GetMapping("/export")
     public void exportCSV(HttpServletResponse response) throws Exception {
-        lotService.ExportLots(response);
+        lotService.exportLots(response);
     }
 }
