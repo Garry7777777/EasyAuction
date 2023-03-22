@@ -4,15 +4,12 @@ import com.skypro.auction.DTO.*;
 import com.skypro.auction.enums.*;
 import com.skypro.auction.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import static com.skypro.auction.enums.Status.*;
-
-
 
 @RestController
 @RequestMapping("/lot")
@@ -29,12 +26,14 @@ public class LotController {
                 ResponseEntity.ok(lotService.createLot(createLotDTO));
         else return ResponseEntity.badRequest().build();
     }
-
+    @NotNull
     @GetMapping
     public ResponseEntity<Collection<LotDTO>> getLots(
-            @RequestParam(required = false)@PageableDefault Pageable pageable,
-            @RequestParam(required = false) Status status){
-    return ResponseEntity.ok(lotService.getLots(pageable, status));
+            @RequestParam(value = "page", required = false) Integer page,
+            @RequestParam(value = "status", required = false) Status status){
+
+        page =  page==null ? 0: page;
+        return ResponseEntity.ok(lotService.getLots(page, status));
     }
 
     @PostMapping ("/{id}/stop")

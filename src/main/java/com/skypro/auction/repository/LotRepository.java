@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface LotRepository extends JpaRepository <Lot, Long> {
     List<Lot> findAllByStatusEquals(Status status, Pageable pageable);
+    List<Lot> findAllBy(Pageable pageable);
 }
