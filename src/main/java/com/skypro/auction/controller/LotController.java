@@ -1,15 +1,11 @@
 package com.skypro.auction.controller;
 
-import com.opencsv.CSVWriter;
-import com.opencsv.bean.StatefulBeanToCsv;
-import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.skypro.auction.DTO.*;
 import com.skypro.auction.enums.*;
 import com.skypro.auction.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
@@ -88,20 +84,6 @@ public class LotController {
 
     @GetMapping("/export")
     public void exportCSV(HttpServletResponse response) throws Exception {
-
-        //set file name and content type
-        String filename = "lots.csv";
-        response.setContentType("text/csv");
-        response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
-                "attachment; filename=\"" + filename + "\"");
-
-        //create a csv writer
-        StatefulBeanToCsv<ExportLotDTO> writer = new StatefulBeanToCsvBuilder<ExportLotDTO>(response.getWriter())
-                .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
-                .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
-                .withOrderedResults(false)
-                .build();
-
-        writer.write(lotService.listExportLots());
+        lotService.ExportLots(response);
     }
 }
