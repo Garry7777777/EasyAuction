@@ -46,7 +46,7 @@ public class LotService {
     private Integer pageSize;
 
     public Collection<LotDTO> getLots(Integer page, Status status) {
-        PageRequest pageRequest = PageRequest.of(page, pageSize);
+        var pageRequest = PageRequest.of(page, pageSize);
         if (status == null) return lotRepository.findAllBy(pageRequest).stream().
                                     map(LotDTO::fromLot).collect(Collectors.toList());
         return lotRepository.findAllByStatusEquals(status, pageRequest).stream().
@@ -54,7 +54,7 @@ public class LotService {
     }
 
     public FullLotDTO getLotById(Long id) {
-        var lot = lotRepository.findById(id); //.orElse(null);
+        var lot = lotRepository.findById(id);
         if (lot.isEmpty()) return null;
         var fullLotDTO = FullLotDTO.fromLot(lot.get());
         fullLotDTO.setCurrentPrice(getCurrentPrice(id));
