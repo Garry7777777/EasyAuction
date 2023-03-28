@@ -6,18 +6,21 @@ import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
 @Data
-public class LotDTO {
+public class FullLotDTO {
     private Long id;
-    private Status status;
+    private Status status = Status.CREATED;
     private String title;
     private String  description;
     private Integer startPrice;
     private Integer bidPrice;
+    private Integer currentPrice;
+    private BidDTO lastBid;
 
 
-    public static LotDTO fromLot(Lot lot){
-        var dto = new LotDTO();
+    public static FullLotDTO fromLot(Lot lot){
+        var dto = new FullLotDTO();
         BeanUtils.copyProperties(lot, dto);
         return dto;
     }
+
 }
